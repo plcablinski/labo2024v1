@@ -12,6 +12,11 @@ setwd("c:/labi") # Establezco el Working Directory
 # cargo el dataset
 dataset <- fread("./datasets/dataset_pequeno.csv")
 
+# agregar una columna peso si clase_ternaria es BAJA+2 asignarle 40, sino 1
+dataset[, peso := ifelse(clase_ternaria == "BAJA+2", 40, 1)]
+
+
+
 dtrain <- dataset[foto_mes == 202107] # defino donde voy a entrenar
 dapply <- dataset[foto_mes == 202109] # defino donde voy a aplicar el modelo
 
@@ -22,9 +27,9 @@ modelo <- rpart(
         data = dtrain, # los datos donde voy a entrenar
         xval = 0,
         cp = -0.5, # esto significa no limitar la complejidad de los splits
-        minsplit = 400, # minima cantidad de registros para que se haga el split
+        minsplit = 10, # minima cantidad de registros para que se haga el split
         minbucket = 5, # tamaño minimo de una hoja
-        maxdepth = 10
+        maxdepth = 4
 ) # profundidad maxima del arbol
 
 
