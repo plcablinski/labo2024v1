@@ -1,23 +1,16 @@
 # Arbol elemental con libreria  rpart
 # Debe tener instaladas las librerias  data.table  ,  rpart  y  rpart.plot
 
-# Agrego una línea
-
 # cargo las librerias que necesito
 require("data.table")
 require("rpart")
 require("rpart.plot")
 
 # Aqui se debe poner la carpeta de la materia de SU computadora local
-setwd("c:/labi") # Establezco el Working Directory
+setwd("~/buckets/b1/") # Establezco el Working Directory
 
 # cargo el dataset
 dataset <- fread("./datasets/dataset_pequeno.csv")
-
-# agregar una columna peso si clase_ternaria es BAJA+2 asignarle 40, sino 1
-dataset[, peso := ifelse(clase_ternaria == "BAJA+2", 40, 1)]
-
-
 
 dtrain <- dataset[foto_mes == 202107] # defino donde voy a entrenar
 dapply <- dataset[foto_mes == 202109] # defino donde voy a aplicar el modelo
@@ -29,9 +22,9 @@ modelo <- rpart(
         data = dtrain, # los datos donde voy a entrenar
         xval = 0,
         cp = -0.5, # esto significa no limitar la complejidad de los splits
-        minsplit = 10, # minima cantidad de registros para que se haga el split
-        minbucket = 5, # tamaño minimo de una hoja
-        maxdepth = 4
+        minsplit = 0, # minima cantidad de registros para que se haga el split
+        minbucket = 0, # tamaño minimo de una hoja
+        maxdepth = 30
 ) # profundidad maxima del arbol
 
 
