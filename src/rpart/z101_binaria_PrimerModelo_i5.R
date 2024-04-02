@@ -27,12 +27,12 @@ modelo <- rpart(
   formula = "clase_ternaria ~ .",
   # los datos donde voy a entrenar excluyendo la columna pesos
   data = dtrain[, -"pesos"] , 
-  weights = dtrain$pesos, # los pesos
+  #weights = dtrain$pesos, # los pesos
   xval = 0,
   cp = -0.5, # esto significa no limitar la complejidad de los splits
-  minsplit = 1400, # minima cantidad de registros para que se haga el split
-  minbucket = 500, # tamaño minimo de una hoja
-  maxdepth = 5
+  minsplit = 600, # minima cantidad de registros para que se haga el split
+  minbucket = 170, # tamaño minimo de una hoja
+  maxdepth = 6
 ) # profundidad maxima del arbol
 
 # grafico el arbol
