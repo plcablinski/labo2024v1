@@ -83,8 +83,10 @@ ArbolesMontecarlo <- function(semillas, param_basicos) {
   )
 
   ganancia_promedio <- mean(unlist(ganancias))
+  
+  desvio_promedio <- sd(unlist(ganancias))
 
-  return(ganancia_promedio)
+  return(list(ganancia_promedio, desvio_promedio))
 }
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -99,6 +101,9 @@ dataset <- fread("./datasets/dataset_pequeno.csv")
 # trabajo solo con los datos con clase, es decir 202107
 dataset <- dataset[clase_ternaria != ""]
 
+# Reemplazar en dataset clase_ternaria donde dice "BAJA+1" por "CONTINUA"
+dataset$clase_ternaria <- ifelse(dataset$clase_ternaria == "BAJA+1", "CONTINUA", dataset$clase_ternaria)
+
 # genero el archivo para Kaggle
 # creo la carpeta donde va el experimento
 # HT  representa  Hiperparameter Tuning
@@ -112,21 +117,22 @@ tb_grid_search <- data.table( max_depth = integer(),
                               min_bucket = integer(),
                               min_cp = numeric(),
                               peso_baja2 = numeric(),
-                              ganancia_promedio = numeric() )
+                              ganancia_promedio = numeric(),
+                              desvio_promedio = numeric())
+
 
 # itero por los loops anidados para cada hiperparametro
-for (vpeso in c(1,2)) {
+for (vpeso in c(1.1,1.2)) {
   # agregar la columna pesos a dataset en funcion de los valores de clase_ternaria 
   pesos <- c("BAJA+1" = 1, "BAJA+2" = vpeso, "CONTINUA" = 1)
   dataset$pesos <- pesos[dataset$clase_ternaria]
   for (vmin_cp in c(-0.5)) {
-    for (vmax_depth in c( 8, 10, 12)) {
-      for (vmin_split in c(200, 100, 50, 20, 10,5,2,1)) {
-        for (vmin_bucket in c(100, 50, 20, 10,5,2,1)) {
-          if (2 * vmin_bucket > vmin_split) {
-            next
-          } # valida que el bucket sea menor que el split para no procesar de vicio
-
+    for (vmax_depth in c( 6)) {
+      for (vmin_split in c(850)) {
+        for (vmin_bucket in c(200)) {
+          # if (2 * vmin_bucket > vmin_split) {
+          #   next
+          # } # valida que el bucket sea menor que el split para no procesar de vicio
                     param_basicos <- list(
             "cp" = vmin_cp, # complejidad minima
             "minsplit" = vmin_split, # vminsplit  minima cantidad de registros en un nodo para hacer el split
@@ -135,12 +141,14 @@ for (vpeso in c(1,2)) {
           ) # profundidad máxima del arbol
           
           # Un solo llamado, con la semilla 17
-          ganancia_promedio <- ArbolesMontecarlo(PARAM$semillas, param_basicos)
+          ganancias <- ArbolesMontecarlo(PARAM$semillas, param_basicos)
+          ganancia_promedio <- ganancias[1]
+          desvio_promedio <- ganancias[2]
           
           # agrego a la tabla
           tb_grid_search <- rbindlist( 
             list( tb_grid_search, 
-                  list( vmax_depth, vmin_split, vmin_bucket, vmin_cp, vpeso, ganancia_promedio) ) )
+                  list( vmax_depth, vmin_split, vmin_bucket, vmin_cp, vpeso, ganancia_promedio, desvio_promedio) ) )
         } # cierre del ciclo bucket
       }  # cierre del ciclo split
     }  # cierre del ciclo depth
