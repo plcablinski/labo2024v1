@@ -20,7 +20,7 @@ require("mlrMBO")
 # cantidad de iteraciones de la Optimizacion Bayesiana
 PARAM <- list()
 
-PARAM$BO_iter <- 50 #cantidad de iteraciones de la Bayesian Optimization
+PARAM$BO_iter <- 100 #cantidad de iteraciones de la Bayesian Optimization
 
 # la letra L al final de 1L significa ENTERO
 PARAM$hs <- makeParamSet(
