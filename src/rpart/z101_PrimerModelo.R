@@ -7,7 +7,7 @@ require("rpart")
 require("rpart.plot")
 
 # Aqui se debe poner la carpeta de la materia de SU computadora local
-setwd("X:\\gdrive\\labo2024v1\\") # Establezco el Working Directory
+setwd("c:/labi") # Establezco el Working Directory
 
 # cargo el dataset
 dataset <- fread("./datasets/dataset_pequeno.csv")
@@ -21,10 +21,10 @@ modelo <- rpart(
         formula = "clase_ternaria ~ .",
         data = dtrain, # los datos donde voy a entrenar
         xval = 0,
-        cp = -0.3, # esto significa no limitar la complejidad de los splits
-        minsplit = 0, # minima cantidad de registros para que se haga el split
-        minbucket = 1, # tamaño minimo de una hoja
-        maxdepth = 3
+        cp = -0.9, # esto significa no limitar la complejidad de los splits
+        minsplit = 800, # minima cantidad de registros para que se haga el split
+        minbucket = 240, # tamaño minimo de una hoja
+        maxdepth = 14
 ) # profundidad maxima del arbol
 
 
