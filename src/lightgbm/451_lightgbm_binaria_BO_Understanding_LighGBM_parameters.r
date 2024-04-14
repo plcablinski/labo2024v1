@@ -33,7 +33,7 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "HT4510"
+PARAM$experimento <- "HT4510_ULGBMP"
 
 PARAM$input$dataset <- "./datasets/dataset_pequeno.csv"
 PARAM$input$training <- c(202107) # los meses en los que vamos a entrenar
@@ -145,7 +145,8 @@ EstimarGanancia_lightgbm <- function(x) {
     max_bin = 31, # por ahora, lo dejo fijo
     num_iterations = 9999, # valor grande, lo limita early_stopping_rounds
     force_row_wise = TRUE, # para evitar warning
-    seed = ksemilla_azar1
+    seed = ksemilla_azar1,
+    is_unbalance = TRUE # Indica que las clases están desbalanceadas  
   )
 
   # el parametro discolo, que depende de otro
