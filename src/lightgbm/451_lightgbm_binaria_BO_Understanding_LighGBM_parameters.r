@@ -7,7 +7,7 @@
 # la probabilidad de corte es un hiperparametro
 
 # limpio la memoria
-rm(list = ls()) # remove all objects
+rm(list = ls()) # remove all objects #
 gc() # garbage collection
 
 require("data.table")
