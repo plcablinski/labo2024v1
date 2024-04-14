@@ -146,7 +146,8 @@ EstimarGanancia_lightgbm <- function(x) {
     num_iterations = 9999, # valor grande, lo limita early_stopping_rounds
     force_row_wise = TRUE, # para evitar warning
     seed = ksemilla_azar1,
-    is_unbalance = TRUE # Indica que las clases están desbalanceadas  
+    is_unbalance = TRUE # Indica que las clases están desbalanceadas,
+    free_raw_data = FALSE # If you'd prefer to be able to change the Dataset object after construction 
   )
 
   # el parametro discolo, que depende de otro
