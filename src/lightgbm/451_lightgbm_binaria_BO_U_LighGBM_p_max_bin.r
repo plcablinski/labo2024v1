@@ -55,10 +55,10 @@ hs <- makeParamSet(
   makeNumericParam("feature_fraction", lower = 0.2, upper = 1.0),
   makeNumericParam("lambda_l1", lower = 0.0, upper = 1.0),
   makeNumericParam("lambda_l2", lower = 0.0, upper = 1.0),
-  makeIntegerParam("max_bin", lower = 20L, upper = 50L),
   makeIntegerParam("min_data_in_leaf", lower = 1L, upper = 8000L),
   makeIntegerParam("num_leaves", lower = 16L, upper = 4096L),
   makeIntegerParam("max_depth", lower = 5L, upper = 12L),
+  makeIntegerParam("max_bin", lower = 25L, upper = 50L),
   makeIntegerParam("envios", lower = 5000L, upper = 15000L)
 )
 
@@ -142,12 +142,11 @@ EstimarGanancia_lightgbm <- function(x) {
     boost_from_average = TRUE,
     feature_pre_filter = FALSE,
     verbosity = -100,
-    min_gain_to_split = 0.0, # por ahora, lo dejo fijo  
+    min_gain_to_split = 0.0, # por ahora, lo dejo fijo
     num_iterations = 9999, # valor grande, lo limita early_stopping_rounds
     force_row_wise = TRUE, # para evitar warning
     seed = ksemilla_azar1,
-    is_unbalance = TRUE, # Indica que las clases están desbalanceadas,
-    free_raw_data = FALSE # If you'd prefer to be able to change the Dataset object after construction 
+    is_unbalance = TRUE # Indica que las clases están desbalanceadas  
   )
 
   # el parametro discolo, que depende de otro
