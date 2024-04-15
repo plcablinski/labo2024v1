@@ -42,7 +42,7 @@ PARAM$input$training <- c(202107) # los meses en los que vamos a entrenar
 # undersampling de 1.0  implica tomar TODOS los datos
 PARAM$trainingstrategy$undersampling <- 1.0
 
-PARAM$hyperparametertuning$iteraciones <- 200
+PARAM$hyperparametertuning$iteraciones <- 300
 PARAM$hyperparametertuning$xval_folds <- 5
 PARAM$hyperparametertuning$POS_ganancia <- 117000
 PARAM$hyperparametertuning$NEG_ganancia <- -3000
@@ -52,11 +52,12 @@ PARAM$hyperparametertuning$NEG_ganancia <- -3000
 # Aqui se cargan los bordes de los hiperparametros
 hs <- makeParamSet(
   makeNumericParam("learning_rate", lower = 0.01, upper = 0.3),
-  makeNumericParam("feature_fraction", lower = 0.2, upper = 1.0),
+  makeNumericParam("feature_fraction", lower = 0.1, upper = 1.0),
   makeNumericParam("lambda_l1", lower = 0.0, upper = 1.0),
   makeNumericParam("lambda_l2", lower = 0.0, upper = 1.0),
+  makeNumericParam("min_gain_to_split", lower = 0.0, upper = 1.0),
   makeIntegerParam("min_data_in_leaf", lower = 1L, upper = 8000L),
-  makeIntegerParam("num_leaves", lower = 16L, upper = 65536L),
+  makeIntegerParam("num_leaves", lower = 16L, upper = 1024L),
   makeIntegerParam("max_depth", lower = 5L, upper = 18L),
   makeIntegerParam("envios", lower = 8000L, upper = 15000L)
 )
@@ -141,8 +142,7 @@ EstimarGanancia_lightgbm <- function(x) {
     boost_from_average = TRUE,
     feature_pre_filter = FALSE,
     verbosity = -100,
-    min_gain_to_split = 0.0, # por ahora, lo dejo fijo
-    max_bin = 50L, # por ahora, lo dejo fijo
+    max_bin = 31, # por ahora, lo dejo fijo
     num_iterations = 9999, # valor grande, lo limita early_stopping_rounds
     force_row_wise = TRUE, # para evitar warning
     seed = ksemilla_azar1,
