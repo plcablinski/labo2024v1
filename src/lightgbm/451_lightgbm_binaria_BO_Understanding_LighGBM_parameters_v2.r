@@ -57,8 +57,8 @@ hs <- makeParamSet(
   makeNumericParam("lambda_l2", lower = 0.0, upper = 1.0),
   makeNumericParam("min_gain_to_split", lower = 0.0, upper = 1.0),
   makeIntegerParam("min_data_in_leaf", lower = 1L, upper = 8000L),
-  makeIntegerParam("num_leaves", lower = 16L, upper = 1024L),
-  makeIntegerParam("max_depth", lower = 5L, upper = 18L),
+  makeIntegerParam("num_leaves", lower = 16L, upper = 65536L),
+  makeIntegerParam("max_depth", lower = 5L, upper = 20L),
   makeIntegerParam("envios", lower = 8000L, upper = 15000L)
 )
 
