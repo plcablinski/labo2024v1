@@ -129,8 +129,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # Aqui debe usted agregar sus propias nuevas variables
   # Totaliza la cantidad de transacciones de las tarjetas de debito y crédito
-  browser()
-  dataset[, transacciones_total :=  ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
+   dataset[, transacciones_total :=  ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
 
 
   # valvula de seguridad para evitar valores infinitos
