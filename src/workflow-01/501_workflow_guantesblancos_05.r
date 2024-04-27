@@ -55,7 +55,7 @@ source( exp_lib )
 
 #------------------------------------------------------------------------------
 
-# pmyexp <- "DT0002"
+# pmyexp <- "DT0005"
 # parch <- "competencia_2024.csv.gz"
 # pserver <- "local"
 
@@ -75,8 +75,8 @@ DT_incorporar_dataset_default <- function( pmyexp, parch, pserver="local")
 }
 #------------------------------------------------------------------------------
 
-# pmyexp <- "CA0001"
-# pinputexps <- "DT0002"
+# pmyexp <- "CA0005"
+# pinputexps <- "DT0005"
 # pserver <- "local"
 
 CA_catastrophe_default <- function( pmyexp, pinputexps, pserver="local")
@@ -95,8 +95,8 @@ CA_catastrophe_default <- function( pmyexp, pinputexps, pserver="local")
 # Data Drifting de Guantes Blancos
 
 
-# pmyexp <- "DR0001"
-# pinputexps <- "CA0001"
+# pmyexp <- "DR0005"
+# pinputexps <- "CA0005"
 # pserver <- "local"
 
 DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
@@ -104,10 +104,10 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/src/workflow-01/z531_DR_corregir_drifting.r"
+  param_local$meta$script <- "/src/workflow-01/p531_DR_corregir_drifting.r"
 
   # No me engraso las manos con Feature Engineering manual
-  param_local$variables_intrames <- FALSE
+  param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
   param_local$metodo <- "rank_cero_fijo"
@@ -116,8 +116,8 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 }
 #------------------------------------------------------------------------------
 
-# pmyexp <- "FE0001"
-# pinputexps <- "DR0001"
+# pmyexp <- "FE0005"
+# pinputexps <- "DR0005"
 # pserver <- "local"
 
 FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
@@ -318,18 +318,18 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  DT_incorporar_dataset_default( "DT0001", "competencia_2024.csv.gz")
-  CA_catastrophe_default( "CA0001", "DT0001" )
+  DT_incorporar_dataset_default( "DT0005", "competencia_2024.csv.gz")
+  CA_catastrophe_default( "CA0005", "DT0005" )
 
-  DR_drifting_guantesblancos( "DR0001", "CA0001" )
-  FE_historia_guantesblancos( "FE0001", "DR0001" )
+  DR_drifting_guantesblancos( "DR0005", "CA0005" )
+  FE_historia_guantesblancos( "FE0005", "DR0005" )
 
-  TS_strategy_guantesblancos_202109( "TS0001", "FE0001" )
+  TS_strategy_guantesblancos_202109( "TS0005", "FE0005" )
 
-  HT_tuning_guantesblancos( "HT0001", "TS0001" )
+  HT_tuning_guantesblancos( "HT0005", "TS0005" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0001", c("HT0001","TS0001") )
+  ZZ_final_guantesblancos( "ZZ0005", c("HT0005","TS0005") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -346,12 +346,12 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( "TS0002", "FE0001" )
+  TS_strategy_guantesblancos_202107( "TS0006", "FE0005" )
 
-  HT_tuning_guantesblancos( "HT0002", "TS0002" )
+  HT_tuning_guantesblancos( "HT0006", "TS0006" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0002", c("HT0002", "TS0002") )
+  ZZ_final_guantesblancos( "ZZ0006", c("HT0006", "TS0006") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -362,13 +362,13 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 
 # Hago primero esta corrida que me genera los experimentos
-# DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_guantesblancos_202109( "gb01" )
+# DT0005, CA0005, DR0005, FE0005, TS0005, HT0005 y ZZ0005
+corrida_guantesblancos_202109( "gb05" )
 
 
-# Luego partiendo de  FE0001
-# genero TS0002, HT0002 y ZZ0002
+# Luego partiendo de  FE0005
+# genero TS0006, HT0006 y ZZ0006
 
-corrida_guantesblancos_202107( "gb02" )
+corrida_guantesblancos_202107( "gb06" )
 
  
