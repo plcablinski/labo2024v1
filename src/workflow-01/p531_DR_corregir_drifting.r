@@ -108,11 +108,13 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vm_cconsumos := rowSums(cbind(Master_cconsumos, Visa_cconsumos), na.rm = TRUE)]
   dataset[, vm_cadelantosefectivo := rowSums(cbind(Master_cadelantosefectivo, Visa_cadelantosefectivo), na.rm = TRUE)]
   dataset[, vm_mpagominimo := rowSums(cbind(Master_mpagominimo, Visa_mpagominimo), na.rm = TRUE)]
+  dataset[, vm_mtarjeta_consumo := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
 
   # a partir de aqui juego con la suma de Mastercard y Visa
   dataset[, vmr_Master_mlimitecompra := Master_mlimitecompra / vm_mlimitecompra]
   dataset[, vmr_Visa_mlimitecompra := Visa_mlimitecompra / vm_mlimitecompra]
   dataset[, vmr_msaldototal := vm_msaldototal / vm_mlimitecompra]
+  dataset[, vmr_consumo_mlimite_compra := vm_tarjeta_consumo / vm_mlimitecompra]
   dataset[, vmr_msaldopesos := vm_msaldopesos / vm_mlimitecompra]
   dataset[, vmr_msaldopesos2 := vm_msaldopesos / vm_msaldototal]
   dataset[, vmr_msaldodolares := vm_msaldodolares / vm_mlimitecompra]
@@ -136,6 +138,10 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, mpasivos_margen_sobre_mediana := mpasivos_margen / median(mpasivos_margen, na.rm = TRUE), by = foto_mes]
   dataset[, mpayroll_sobre_mediana := mpayroll / median(mpayroll, na.rm = TRUE), by = foto_mes]
   dataset[, mprestamos_personales_sobre_mediana := mprestamos_personales / median(mprestamos_personales, na.rm = TRUE), by = foto_mes]
+  dataset[, mrentabilidad_annual_sobre_mediana := mrentabilidad_annual / median(mrentabilidad_annual, na.rm = TRUE), by = foto_mes]
+  
+  
+  dataset[, vm_mtarjeta_consumo_sobre_mediana := vm_mtarjeta_consumo / median(vm_mtarjeta_consumo, na.rm = TRUE), by = foto_mes]
   
   
   # valvula de seguridad para evitar valores infinitos
