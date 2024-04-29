@@ -110,7 +110,7 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 
   param_local$meta$script <- "/src/workflow-01/z541_FE_historia.r"
 
-  param_local$lag1 <- TRUE
+  param_local$lag1 <- FALSE
   param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
   param_local$lag3 <- FALSE # no me engraso con los lags de orden 3
 
@@ -300,6 +300,6 @@ corrida_m_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_m_202107( "man02" )
+corrida_m_202107( "man03" )
 
 
