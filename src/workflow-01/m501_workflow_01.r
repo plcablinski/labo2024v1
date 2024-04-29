@@ -97,7 +97,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$variables_intrames <- FALSE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "rank_cero_fijo"
+  param_local$metodo <- "ninguno"
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -276,18 +276,18 @@ corrida_m_202107 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  DT_incorporar_dataset_default( "DT0010", "competencia_2024.csv.gz")
-  CA_catastrophe_default( "CA0010", "DT0010" )
+  DT_incorporar_dataset_default( "DT0011", "competencia_2024.csv.gz")
+  CA_catastrophe_default( "CA0011", "DT0011" )
 
-  DR_drifting_guantesblancos( "DR0010", "CA0010" )
-  FE_historia_guantesblancos( "FE0010", "DR0010" )
+  DR_drifting_guantesblancos( "DR0011", "CA0011" )
+  FE_historia_guantesblancos( "FE0011", "DR0011" )
 
-  TS_strategy_guantesblancos_202107( "TS0010", "FE0010" )
+  TS_strategy_guantesblancos_202107( "TS0011", "FE0011" )
 
-  HT_tuning_guantesblancos( "HT0010", "TS0010" )
+  HT_tuning_guantesblancos( "HT0011", "TS0011" )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0010", c("HT0010","TS0010") )
+  ZZ_final_guantesblancos( "ZZ0011", c("HT0011","TS0011") )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -300,6 +300,6 @@ corrida_m_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_m_202107( "man01" )
+corrida_m_202107( "man02" )
 
 
