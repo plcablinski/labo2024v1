@@ -161,7 +161,7 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  param_local$meta$script <- "/src/workflow-01/z551_TS_training_strategy.r"
+  param_local$meta$script <- "/src/workflow-01/p551_TS_training_strategy.r"
 
 
   param_local$future <- c(202107)
