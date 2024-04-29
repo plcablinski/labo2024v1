@@ -130,7 +130,9 @@ AgregarVariables_IntraMes <- function(dataset) {
   # Aqui debe usted agregar sus propias nuevas variables
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   
-
+  # divido mcaja_ahorro por la mediana de mcaja_ahorro para ese foto_mes
+  dataset[, m_mcaja_ahorro_sobre_mediana := mcaja_ahorro / median(mcaja_ahorro, na.rm = TRUE), by = foto_mes]
+  
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
   infinitos <- lapply(
