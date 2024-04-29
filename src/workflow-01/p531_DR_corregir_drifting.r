@@ -50,6 +50,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
+  cat( "\n","Inicia variables intrames cátedra")
   dataset[, ctrx_quarter_normalizado := ctrx_quarter]
   dataset[cliente_antiguedad == 1, ctrx_quarter_normalizado := ctrx_quarter * 5]
   dataset[cliente_antiguedad == 2, ctrx_quarter_normalizado := ctrx_quarter * 2]
@@ -108,13 +109,13 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vm_cconsumos := rowSums(cbind(Master_cconsumos, Visa_cconsumos), na.rm = TRUE)]
   dataset[, vm_cadelantosefectivo := rowSums(cbind(Master_cadelantosefectivo, Visa_cadelantosefectivo), na.rm = TRUE)]
   dataset[, vm_mpagominimo := rowSums(cbind(Master_mpagominimo, Visa_mpagominimo), na.rm = TRUE)]
-  dataset[, vm_mtarjeta_consumo := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
+  
 
   # a partir de aqui juego con la suma de Mastercard y Visa
+  
   dataset[, vmr_Master_mlimitecompra := Master_mlimitecompra / vm_mlimitecompra]
   dataset[, vmr_Visa_mlimitecompra := Visa_mlimitecompra / vm_mlimitecompra]
   dataset[, vmr_msaldototal := vm_msaldototal / vm_mlimitecompra]
-  dataset[, vmr_consumo_mlimite_compra := vm_tarjeta_consumo / vm_mlimitecompra]
   dataset[, vmr_msaldopesos := vm_msaldopesos / vm_mlimitecompra]
   dataset[, vmr_msaldopesos2 := vm_msaldopesos / vm_msaldototal]
   dataset[, vmr_msaldodolares := vm_msaldodolares / vm_mlimitecompra]
@@ -129,19 +130,25 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vmr_mconsumototal := vm_mconsumototal / vm_mlimitecompra]
   dataset[, vmr_mpagominimo := vm_mpagominimo / vm_mlimitecompra]
 
+  cat( "\n","Fin variables intrames cátedra")
   # Aqui debe usted agregar sus propias nuevas variables
+  cat( "\n","Inicio variables combinadas agregadas")
+  dataset[, vm_mtarjeta_consumo := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
+  dataset[, vmr_consumo_mlimite_compra := vm_mtarjeta_consumo / vm_mlimitecompra]
+  
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
+  cat( "\n","Fin variables combinadas agregadas")
   
   # divide columna por la mediana de columna para ese foto_mes
+  cat( "\n","Inicio variables sobre mediana")
   dataset[, mcaja_ahorro_sobre_mediana := mcaja_ahorro / median(mcaja_ahorro, na.rm = TRUE), by = foto_mes]
   dataset[, mcuentas_saldo_sobre_mediana := mcuentas_saldo / median(mcuentas_saldo, na.rm = TRUE), by = foto_mes]
   dataset[, mpasivos_margen_sobre_mediana := mpasivos_margen / median(mpasivos_margen, na.rm = TRUE), by = foto_mes]
   dataset[, mpayroll_sobre_mediana := mpayroll / median(mpayroll, na.rm = TRUE), by = foto_mes]
   dataset[, mprestamos_personales_sobre_mediana := mprestamos_personales / median(mprestamos_personales, na.rm = TRUE), by = foto_mes]
   dataset[, mrentabilidad_annual_sobre_mediana := mrentabilidad_annual / median(mrentabilidad_annual, na.rm = TRUE), by = foto_mes]
-  
-  
   dataset[, vm_mtarjeta_consumo_sobre_mediana := vm_mtarjeta_consumo / median(vm_mtarjeta_consumo, na.rm = TRUE), by = foto_mes]
+  cat( "\n","Fin variables sobre mediana")
   
   
   # valvula de seguridad para evitar valores infinitos
