@@ -50,7 +50,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
-  cat("Inicia variables intrames cátedra")
+  cat( "\n","Inicia variables intrames cátedra")
   dataset[, ctrx_quarter_normalizado := ctrx_quarter]
   dataset[cliente_antiguedad == 1, ctrx_quarter_normalizado := ctrx_quarter * 5]
   dataset[cliente_antiguedad == 2, ctrx_quarter_normalizado := ctrx_quarter * 2]
@@ -130,17 +130,17 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vmr_mconsumototal := vm_mconsumototal / vm_mlimitecompra]
   dataset[, vmr_mpagominimo := vm_mpagominimo / vm_mlimitecompra]
 
-  cat("Fin variables intrames cátedra")
+  cat( "\n","Fin variables intrames cátedra")
   # Aqui debe usted agregar sus propias nuevas variables
-  cat("Inicio variables combinadas agregadas")
+  cat( "\n","Inicio variables combinadas agregadas")
   dataset[, vm_mtarjeta_consumo := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
-  dataset[, vmr_consumo_mlimite_compra := vm_tarjeta_consumo / vm_mlimitecompra]
+  dataset[, vmr_consumo_mlimite_compra := vm_mtarjeta_consumo / vm_mlimitecompra]
   
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
-  cat("Fin variables combinadas agregadas")
+  cat( "\n","Fin variables combinadas agregadas")
   
   # divide columna por la mediana de columna para ese foto_mes
-  cat("Inicio variables sobre mediana")
+  cat( "\n","Inicio variables sobre mediana")
   dataset[, mcaja_ahorro_sobre_mediana := mcaja_ahorro / median(mcaja_ahorro, na.rm = TRUE), by = foto_mes]
   dataset[, mcuentas_saldo_sobre_mediana := mcuentas_saldo / median(mcuentas_saldo, na.rm = TRUE), by = foto_mes]
   dataset[, mpasivos_margen_sobre_mediana := mpasivos_margen / median(mpasivos_margen, na.rm = TRUE), by = foto_mes]
@@ -148,7 +148,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, mprestamos_personales_sobre_mediana := mprestamos_personales / median(mprestamos_personales, na.rm = TRUE), by = foto_mes]
   dataset[, mrentabilidad_annual_sobre_mediana := mrentabilidad_annual / median(mrentabilidad_annual, na.rm = TRUE), by = foto_mes]
   dataset[, vm_mtarjeta_consumo_sobre_mediana := vm_mtarjeta_consumo / median(vm_mtarjeta_consumo, na.rm = TRUE), by = foto_mes]
-  cat("Fin variables sobre mediana")
+  cat( "\n","Fin variables sobre mediana")
   
   
   # valvula de seguridad para evitar valores infinitos
