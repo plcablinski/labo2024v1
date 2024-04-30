@@ -142,8 +142,17 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, totalserv := rowSums(cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales, ccaja_seguridad), na.rm = TRUE)]
   dataset[, totalpayrollpesos := rowSums(cbind(mpayroll, mpayroll2), na.rm = TRUE)]
   dataset[, totalpayrollcant := rowSums(cbind(cpayroll_trx, cpayroll2_trx), na.rm = TRUE)]
-  dataset[, totalgastospesos := rowSums(cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos,mttarjeta_master_debitos_automaticos, 
+  dataset[, totalgastospesos := rowSums(cbind(mcuenta_debitos_automaticos, mttarjeta_visa_debitos_automaticos,mttarjeta_master_debitos_automaticos, 
                                         mpagodeservicios, mpagomiscuentas), na.rm = TRUE)]
+  dataset[, totalgastoscant := rowSums(cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos,
+                                        cpagodeservicios, cpagomiscuentas), na.rm = TRUE)]
+  dataset[, totalbenefpesos := rowSums(cbind(mcajeros_propios_descuentos, mtarjeta_visa_descuentos, mtarjeta_master_descuentos), na.rm = TRUE)]
+  dataset[, totalbenefcant := rowSums(cbind(ccajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_master_descuentos), na.rm = TRUE)]
+  dataset[, totalforexpesos := rowSums(cbind(mforex_buy, mforex_sell), na.rm = TRUE)]
+  dataset[, interaccant := rowSums(cbind(ccallcenter_transacciones, chomebanking_transacciones, ccajas_transacciones, ccajas_consultas, 
+                                         ccajas_depositos, ccajas_extracciones, ccajas_otras, catm_trx, catm_trx_other, ctrx_quarter, 
+                                         cmobile_app_trx), na.rm = TRUE)]
+
   dataset[, vmr_consumo_mlimite_compra := vm_mtarjeta_consumo / vm_mlimitecompra]
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   cat( "\n","Fin variables combinadas agregadas")
@@ -163,12 +172,6 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, mrentabilidad_sobre_mediana := mrentabilidad / median(mrentabilidad, na.rm = TRUE), by = foto_mes]
   dataset[, mtransferencias_recibidas_sobre_mediana := mtransferencias_recibidas / median(mtransferencias_recibidas, na.rm = TRUE), by = foto_mes]
   dataset[, mtransferencias_emitidas_sobre_mediana := mtransferencias_emitidas / median(mtransferencias_emitidas, na.rm = TRUE), by = foto_mes]
-  
-  
-  
-  
-  
-  
   
   dataset[, vm_mtarjeta_consumo_sobre_mediana := vm_mtarjeta_consumo / median(vm_mtarjeta_consumo, na.rm = TRUE), by = foto_mes]
   cat( "\n","Fin variables sobre mediana")
