@@ -173,7 +173,6 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, mtransferencias_recibidas_sobre_mediana := mtransferencias_recibidas / median(mtransferencias_recibidas, na.rm = TRUE), by = foto_mes]
   dataset[, mtransferencias_emitidas_sobre_mediana := mtransferencias_emitidas / median(mtransferencias_emitidas, na.rm = TRUE), by = foto_mes]
   
-  dataset[, vm_mtarjeta_consumo_sobre_mediana := vm_mtarjeta_consumo / median(vm_mtarjeta_consumo, na.rm = TRUE), by = foto_mes]
   cat( "\n","Fin variables sobre mediana")
   
   
