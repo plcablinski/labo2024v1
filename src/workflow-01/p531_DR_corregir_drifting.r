@@ -153,7 +153,7 @@ AgregarVariables_IntraMes <- function(dataset) {
                                          ccajas_depositos, ccajas_extracciones, ccajas_otras, catm_trx, catm_trx_other, ctrx_quarter, 
                                          cmobile_app_trx), na.rm = TRUE)]
 
-  dataset[, vmr_consumo_mlimite_compra := vm_mtarjeta_consumo / vm_mlimitecompra]
+  
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   cat( "\n","Fin variables combinadas agregadas")
   
