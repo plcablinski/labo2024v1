@@ -147,6 +147,20 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, mpayroll_sobre_mediana := mpayroll / median(mpayroll, na.rm = TRUE), by = foto_mes]
   dataset[, mprestamos_personales_sobre_mediana := mprestamos_personales / median(mprestamos_personales, na.rm = TRUE), by = foto_mes]
   dataset[, mrentabilidad_annual_sobre_mediana := mrentabilidad_annual / median(mrentabilidad_annual, na.rm = TRUE), by = foto_mes]
+  dataset[, mtarjeta_visa_consumo_sobre_mediana := mtarjeta_visa_consumo / median(mtarjeta_visa_consumo, na.rm = TRUE), by = foto_mes]
+  dataset[, mtarjeta_master_consumo_sobre_mediana := mtarjeta_master_consumo / median(mtarjeta_master_consumo, na.rm = TRUE), by = foto_mes]
+  dataset[, mcuenta_corriente_sobre_mediana := mcuenta_corriente / median(mcuenta_corriente, na.rm = TRUE), by = foto_mes]
+  dataset[, mactivos_margen_sobre_mediana := mactivos_margen / median(mactivos_margen, na.rm = TRUE), by = foto_mes]
+  dataset[, mrentabilidad_sobre_mediana := mrentabilidad / median(mrentabilidad, na.rm = TRUE), by = foto_mes]
+  dataset[, mtransferencias_recibidas_sobre_mediana := mtransferencias_recibidas / median(mtransferencias_recibidas, na.rm = TRUE), by = foto_mes]
+  dataset[, mtransferencias_emitidas_sobre_mediana := mtransferencias_emitidas / median(mtransferencias_emitidas, na.rm = TRUE), by = foto_mes]
+  
+  
+  
+  
+  
+  
+  
   dataset[, vm_mtarjeta_consumo_sobre_mediana := vm_mtarjeta_consumo / median(vm_mtarjeta_consumo, na.rm = TRUE), by = foto_mes]
   cat( "\n","Fin variables sobre mediana")
   

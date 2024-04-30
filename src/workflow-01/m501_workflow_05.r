@@ -110,7 +110,7 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 
   param_local$meta$script <- "/src/workflow-01/z541_FE_historia.r"
 
-  param_local$lag1 <- FALSE
+  param_local$lag1 <- TRUE
   param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
   param_local$lag3 <- FALSE # no me engraso con los lags de orden 3
 
@@ -161,7 +161,7 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  param_local$meta$script <- "/src/workflow-01/p551_TS_training_strategy.r"
+  param_local$meta$script <- "/src/workflow-01/z551_TS_training_strategy.r"
 
 
   param_local$future <- c(202107)
@@ -297,6 +297,6 @@ corrida_m_202107 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_m_202107( "man06","0015" )
+corrida_m_202107( "man07","0017" )
 
 
