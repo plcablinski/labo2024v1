@@ -160,9 +160,9 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, cheqbalpesos := rowSums(cbind(mcheques_depositados, mcheques_emitidos, -mcheques_depositados_rechazados, -mcheques_emitidos_rechazados), na.rm = TRUE)]
   dataset[, cheqbalcant := rowSums(cbind(ccheques_depositados, ccheques_emitidos, -ccheques_depositados_rechazados, -ccheques_emitidos_rechazados), na.rm = TRUE)]
   
-  dataset[, masteruso := master_msaldototal / master_mlimitecompra]
-  dataset[, mastermaniobra := master_mconsumototal / master_msaldoajustado]
-  dataset[, masterlimit := master_mfinanciacion_limite + master_mlimitecompra]
+  dataset[, masteruso := Master_msaldototal / Master_mlimitecompra]
+  dataset[, mastermaniobra := Master_mconsumototal / Master_msaldoajustado]
+  dataset[, masterlimit := Master_mfinanciacion_limite + Master_mlimitecompra]
   
   
   
