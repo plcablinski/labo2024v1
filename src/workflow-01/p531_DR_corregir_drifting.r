@@ -152,6 +152,20 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, interaccant := rowSums(cbind(ccallcenter_transacciones, chomebanking_transacciones, ccajas_transacciones, ccajas_consultas, 
                                          ccajas_depositos, ccajas_extracciones, ccajas_otras, catm_trx, catm_trx_other, ctrx_quarter, 
                                          cmobile_app_trx), na.rm = TRUE)]
+  dataset[, engdig := rowSums(cbind(tcallcenter, thomebanking, tmobile_app), na.rm = TRUE)]
+  dataset[, transftotpesos := rowSums(cbind(mtransferencias_recibidas, mtransferencias_emitidas), na.rm = TRUE)]
+  dataset[, transftotcant := rowSums(cbind(ctransferencias_recibidas, ctransferencias_emitidas), na.rm = TRUE)]
+  dataset[, cheqtotpesos := rowSums(cbind(mcheques_depositados, mcheques_emitidos, mcheques_depositados_rechazados, mcheques_emitidos_rechazados), na.rm = TRUE)]
+  dataset[, cheqtotcant := rowSums(cbind(ccheques_depositados, ccheques_emitidos, ccheques_depositados_rechazados, ccheques_emitidos_rechazados), na.rm = TRUE)]
+  dataset[, cheqbalpesos := rowSums(cbind(mcheques_depositados, mcheques_emitidos, -mcheques_depositados_rechazados, -mcheques_emitidos_rechazados), na.rm = TRUE)]
+  dataset[, cheqbalcant := rowSums(cbind(ccheques_depositados, ccheques_emitidos, -ccheques_depositados_rechazados, -ccheques_emitidos_rechazados), na.rm = TRUE)]
+  
+  dataset[, masteruso := master_msaldototal / master_mlimitecompra]
+  dataset[, mastermaniobra := master_mconsumototal / master_msaldoajustado]
+  dataset[, masterlimit := master_mfinanciacion_limite + master_mlimitecompra]
+  
+  
+  
 
   
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
