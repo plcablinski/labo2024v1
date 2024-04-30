@@ -288,6 +288,6 @@ corrida_m_202107 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 
 # Hago primero esta corrida que me genera los experimentos
 # DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_m_202107( "man07","0017" )
+corrida_m_202107( "man08","0018" )
 
 
