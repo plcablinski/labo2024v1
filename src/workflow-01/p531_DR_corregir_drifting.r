@@ -133,9 +133,18 @@ AgregarVariables_IntraMes <- function(dataset) {
   cat( "\n","Fin variables intrames cátedra")
   # Aqui debe usted agregar sus propias nuevas variables
   cat( "\n","Inicio variables combinadas agregadas")
-  dataset[, vm_mtarjeta_consumo := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
+  dataset[, totconsumostcpesos := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
+  dataset[, totconsumostccant  := rowSums(cbind(ctarjeta_visa_transacciones, ctarjeta_master_transacciones), na.rm = TRUE)]
+  dataset[, totalprestamospesos := rowSums(cbind(mprestamos_personales, mprestamos_prendarios, mprestamos_hipotecarios ), na.rm = TRUE)]
+  dataset[, totalprestamoscant := rowSums(cbind(cprestamos_personales, cprestamos_prendarios, cprestamos_hipotecarios ), na.rm = TRUE)]
+  dataset[, totalinvpesos := rowSums(cbind(mplazo_fijo_dolares, mplazo_fijo_pesos, minversion1_pesos, minversion1_dolares, minversion2 ), na.rm = TRUE)]
+  dataset[, totalinvcantidad := rowSums(cbind(cplazo_fijo, cinversion1, cinversion2), na.rm = TRUE)]
+  dataset[, totalserv := rowSums(cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales, ccaja_seguridad), na.rm = TRUE)]
+  dataset[, totalpayrollpesos := rowSums(cbind(mpayroll, mpayroll2), na.rm = TRUE)]
+  dataset[, totalpayrollcant := rowSums(cbind(cpayroll_trx, cpayroll2_trx), na.rm = TRUE)]
+  dataset[, totalgastospesos := rowSums(cbind(mcuenta_debitos_automaticos, mtarjeta_visa_debitos_automaticos,mttarjeta_master_debitos_automaticos, 
+                                        mpagodeservicios, mpagomiscuentas), na.rm = TRUE)]
   dataset[, vmr_consumo_mlimite_compra := vm_mtarjeta_consumo / vm_mlimitecompra]
-  
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   cat( "\n","Fin variables combinadas agregadas")
   
@@ -174,7 +183,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   infinitos_qty <- sum(unlist(infinitos))
   if (infinitos_qty > 0) {
-    cat(
+    cat("\n",
       "ATENCION, hay", infinitos_qty,
       "valores infinitos en tu dataset. Seran pasados a NA\n"
     )
