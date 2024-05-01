@@ -274,6 +274,11 @@ corrida_m_202107 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
   DR_drifting_guantesblancos( paste0("DR",pcorrida), "CA0013")
+  FE_historia_guantesblancos( paste0("FE",pcorrida), paste0("DR",pcorrida) )
+  TS_strategy_guantesblancos_202107( paste0("TS",pcorrida), paste0("FE",pcorrida))
+  HT_tuning_guantesblancos( paste0("HT",pcorrida), paste0("TS",pcorrida) )
+  # El ZZ depente de HT y TS
+  ZZ_final_guantesblancos( paste0("ZZ",pcorrida), c(paste0("HT",pcorrida),paste0("TS",pcorrida)) )
   
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
 }
@@ -281,6 +286,6 @@ corrida_m_202107 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-corrida_m_202107( "comp02","0021" )
+corrida_m_202107( "comp00","0020" )
 
 
