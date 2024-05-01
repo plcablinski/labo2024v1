@@ -163,10 +163,27 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, masteruso := Master_msaldototal / Master_mlimitecompra]
   dataset[, mastermaniobra := Master_mconsumototal / Master_msaldototal]
   dataset[, masterlimit := Master_mfinanciacion_limite + Master_mlimitecompra]
+  dataset[, masterrisk := Master_Finiciomora / Master_fechaalta]
+  dataset[, visauso := Visa_msaldototal / Visa_mlimitecompra]
+  dataset[, visamaniobra := Visa_mconsumototal / Visa_msaldototal]
+  dataset[, visalimit := Visa_mfinanciacion_limite + Visa_mlimitecompra]
+  dataset[, visarisk := Visa_Finiciomora / Visa_fechaalta]
   
-  
-  
-
+  dataset[, movsantig := (totconsumostccant	+ totalprestamoscant + totalinvcantidad) / cliente_antiguedad]
+  dataset[, tcyantig := totconsumostccant / cliente_antiguedad]
+  dataset[, prestyantig := totalprestamoscant / cliente_antiguedad]
+  dataset[, invyantig := totalinvcantidad / cliente_antiguedad]
+  dataset[, saldoyantig := (totconsumostcpesos + totalprestamospesos + totalinvpesos + totalforexpesos) / cliente_antiguedad]
+  dataset[, movsyedad := (totconsumostccant	+ totalprestamoscant + totalinvcantidad) / cliente_edad]
+  dataset[, tcyedad := totconsumostccant / cliente_edad]
+  dataset[, prestyedad := totalprestamoscant / cliente_edad]
+  dataset[, invyedad := totalinvcantidad / cliente_edad]
+  dataset[, saldoyedad := (totconsumostcpesos + totalprestamospesos + totalinvpesos + totalforexpesos) / cliente_edad]
+  dataset[, cheqydescubierto := cheqbalpesos / cdescubierto_preacordado]
+  dataset[, volumen := rowSums(cbind(totconsumostccant, totalprestamoscant, totalinvcantidad, totalserv, totalpayrollcant, totalgastoscant, totalbenefcant, interaccant, transftotcant, cheqtotcant), na.rm = TRUE)]
+  dataset[, saldoyvolumen := mcuentas_saldo * volumen]
+  dataset[, saldoytotcuentas := mcuentas_saldo * tcuentas]
+  dataset[, solidez := rowSums(cbind(saldoyvolumen, saldoytotcuentas), na.rm = TRUE)]
   
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   cat( "\n","Fin variables combinadas agregadas")
