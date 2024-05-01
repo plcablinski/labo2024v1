@@ -95,7 +95,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 
   # No me engraso las manos con Feature Engineering manual
   param_local$variables_intrames <- TRUE
-  param_local$variable_experimento <- FALSE
+  param_local$variables_experimento <- FALSE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
   param_local$metodo <- "rank_cero_fijo"
