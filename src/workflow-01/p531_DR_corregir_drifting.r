@@ -50,6 +50,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
+  cat( "\n","Inicia variables intrames cátedra")
   dataset[, ctrx_quarter_normalizado := ctrx_quarter]
   dataset[cliente_antiguedad == 1, ctrx_quarter_normalizado := ctrx_quarter * 5]
   dataset[cliente_antiguedad == 2, ctrx_quarter_normalizado := ctrx_quarter * 2]
@@ -108,8 +109,10 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vm_cconsumos := rowSums(cbind(Master_cconsumos, Visa_cconsumos), na.rm = TRUE)]
   dataset[, vm_cadelantosefectivo := rowSums(cbind(Master_cadelantosefectivo, Visa_cadelantosefectivo), na.rm = TRUE)]
   dataset[, vm_mpagominimo := rowSums(cbind(Master_mpagominimo, Visa_mpagominimo), na.rm = TRUE)]
+  
 
   # a partir de aqui juego con la suma de Mastercard y Visa
+  
   dataset[, vmr_Master_mlimitecompra := Master_mlimitecompra / vm_mlimitecompra]
   dataset[, vmr_Visa_mlimitecompra := Visa_mlimitecompra / vm_mlimitecompra]
   dataset[, vmr_msaldototal := vm_msaldototal / vm_mlimitecompra]
@@ -127,11 +130,83 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vmr_mconsumototal := vm_mconsumototal / vm_mlimitecompra]
   dataset[, vmr_mpagominimo := vm_mpagominimo / vm_mlimitecompra]
 
+  cat( "\n","Fin variables intrames cátedra")
   # Aqui debe usted agregar sus propias nuevas variables
-  # Totaliza la cantidad de transacciones de las tarjetas de debito y crédito
-   dataset[, transacciones_total :=  ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
-
-
+  cat( "\n","Inicio variables combinadas agregadas")
+  dataset[, totconsumostcpesos := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
+  dataset[, totconsumostccant  := rowSums(cbind(ctarjeta_visa_transacciones, ctarjeta_master_transacciones), na.rm = TRUE)]
+  dataset[, totalprestamospesos := rowSums(cbind(mprestamos_personales, mprestamos_prendarios, mprestamos_hipotecarios ), na.rm = TRUE)]
+  dataset[, totalprestamoscant := rowSums(cbind(cprestamos_personales, cprestamos_prendarios, cprestamos_hipotecarios ), na.rm = TRUE)]
+  dataset[, totalinvpesos := rowSums(cbind(mplazo_fijo_dolares, mplazo_fijo_pesos, minversion1_pesos, minversion1_dolares, minversion2 ), na.rm = TRUE)]
+  dataset[, totalinvcantidad := rowSums(cbind(cplazo_fijo, cinversion1, cinversion2), na.rm = TRUE)]
+  dataset[, totalserv := rowSums(cbind(cseguro_vida, cseguro_auto, cseguro_vivienda, cseguro_accidentes_personales, ccaja_seguridad), na.rm = TRUE)]
+  dataset[, totalpayrollpesos := rowSums(cbind(mpayroll, mpayroll2), na.rm = TRUE)]
+  dataset[, totalpayrollcant := rowSums(cbind(cpayroll_trx, cpayroll2_trx), na.rm = TRUE)]
+  dataset[, totalgastospesos := rowSums(cbind(mcuenta_debitos_automaticos, mttarjeta_visa_debitos_automaticos,mttarjeta_master_debitos_automaticos, 
+                                        mpagodeservicios, mpagomiscuentas), na.rm = TRUE)]
+  dataset[, totalgastoscant := rowSums(cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos,
+                                        cpagodeservicios, cpagomiscuentas), na.rm = TRUE)]
+  dataset[, totalbenefpesos := rowSums(cbind(mcajeros_propios_descuentos, mtarjeta_visa_descuentos, mtarjeta_master_descuentos), na.rm = TRUE)]
+  dataset[, totalbenefcant := rowSums(cbind(ccajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_master_descuentos), na.rm = TRUE)]
+  dataset[, totalforexpesos := rowSums(cbind(mforex_buy, mforex_sell), na.rm = TRUE)]
+  dataset[, interaccant := rowSums(cbind(ccallcenter_transacciones, chomebanking_transacciones, ccajas_transacciones, ccajas_consultas, 
+                                         ccajas_depositos, ccajas_extracciones, ccajas_otras, catm_trx, catm_trx_other, ctrx_quarter, 
+                                         cmobile_app_trx), na.rm = TRUE)]
+  
+  dataset[, transftotpesos := rowSums(cbind(mtransferencias_recibidas, mtransferencias_emitidas), na.rm = TRUE)]
+  dataset[, transftotcant := rowSums(cbind(ctransferencias_recibidas, ctransferencias_emitidas), na.rm = TRUE)]
+  dataset[, cheqtotpesos := rowSums(cbind(mcheques_depositados, mcheques_emitidos, mcheques_depositados_rechazados, mcheques_emitidos_rechazados), na.rm = TRUE)]
+  dataset[, cheqtotcant := rowSums(cbind(ccheques_depositados, ccheques_emitidos, ccheques_depositados_rechazados, ccheques_emitidos_rechazados), na.rm = TRUE)]
+  dataset[, cheqbalpesos := rowSums(cbind(mcheques_depositados, mcheques_emitidos, -mcheques_depositados_rechazados, -mcheques_emitidos_rechazados), na.rm = TRUE)]
+  dataset[, cheqbalcant := rowSums(cbind(ccheques_depositados, ccheques_emitidos, -ccheques_depositados_rechazados, -ccheques_emitidos_rechazados), na.rm = TRUE)]
+  
+  dataset[, masteruso := Master_msaldototal / Master_mlimitecompra]
+  dataset[, mastermaniobra := Master_mconsumototal / Master_msaldototal]
+  dataset[, masterlimit := Master_mfinanciacion_limite + Master_mlimitecompra]
+  dataset[, masterrisk := Master_Finiciomora / Master_fechaalta]
+  dataset[, visauso := Visa_msaldototal / Visa_mlimitecompra]
+  dataset[, visamaniobra := Visa_mconsumototal / Visa_msaldototal]
+  dataset[, visalimit := Visa_mfinanciacion_limite + Visa_mlimitecompra]
+  dataset[, visarisk := Visa_Finiciomora / Visa_fechaalta]
+  
+  dataset[, movsantig := (totconsumostccant	+ totalprestamoscant + totalinvcantidad) / cliente_antiguedad]
+  dataset[, tcyantig := totconsumostccant / cliente_antiguedad]
+  dataset[, prestyantig := totalprestamoscant / cliente_antiguedad]
+  dataset[, invyantig := totalinvcantidad / cliente_antiguedad]
+  dataset[, saldoyantig := (totconsumostcpesos + totalprestamospesos + totalinvpesos + totalforexpesos) / cliente_antiguedad]
+  dataset[, movsyedad := (totconsumostccant	+ totalprestamoscant + totalinvcantidad) / cliente_edad]
+  dataset[, tcyedad := totconsumostccant / cliente_edad]
+  dataset[, prestyedad := totalprestamoscant / cliente_edad]
+  dataset[, invyedad := totalinvcantidad / cliente_edad]
+  dataset[, saldoyedad := (totconsumostcpesos + totalprestamospesos + totalinvpesos + totalforexpesos) / cliente_edad]
+  dataset[, cheqydescubierto := cheqbalpesos / cdescubierto_preacordado]
+  dataset[, volumen := rowSums(cbind(totconsumostccant, totalprestamoscant, totalinvcantidad, totalserv, totalpayrollcant, totalgastoscant, totalbenefcant, interaccant, transftotcant, cheqtotcant), na.rm = TRUE)]
+  dataset[, saldoyvolumen := mcuentas_saldo * volumen]
+  dataset[, saldoytotcuentas := mcuentas_saldo * tcuentas]
+  dataset[, solidez := rowSums(cbind(saldoyvolumen, saldoytotcuentas), na.rm = TRUE)]
+  
+  dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
+  cat( "\n","Fin variables combinadas agregadas")
+  
+  # divide columna por la mediana de columna para ese foto_mes
+  cat( "\n","Inicio variables sobre mediana")
+  dataset[, mcaja_ahorro_sobre_mediana := mcaja_ahorro / median(mcaja_ahorro, na.rm = TRUE), by = foto_mes]
+  dataset[, mcuentas_saldo_sobre_mediana := mcuentas_saldo / median(mcuentas_saldo, na.rm = TRUE), by = foto_mes]
+  dataset[, mpasivos_margen_sobre_mediana := mpasivos_margen / median(mpasivos_margen, na.rm = TRUE), by = foto_mes]
+  dataset[, mpayroll_sobre_mediana := mpayroll / median(mpayroll, na.rm = TRUE), by = foto_mes]
+  dataset[, mprestamos_personales_sobre_mediana := mprestamos_personales / median(mprestamos_personales, na.rm = TRUE), by = foto_mes]
+  dataset[, mrentabilidad_annual_sobre_mediana := mrentabilidad_annual / median(mrentabilidad_annual, na.rm = TRUE), by = foto_mes]
+  dataset[, mtarjeta_visa_consumo_sobre_mediana := mtarjeta_visa_consumo / median(mtarjeta_visa_consumo, na.rm = TRUE), by = foto_mes]
+  dataset[, mtarjeta_master_consumo_sobre_mediana := mtarjeta_master_consumo / median(mtarjeta_master_consumo, na.rm = TRUE), by = foto_mes]
+  dataset[, mcuenta_corriente_sobre_mediana := mcuenta_corriente / median(mcuenta_corriente, na.rm = TRUE), by = foto_mes]
+  dataset[, mactivos_margen_sobre_mediana := mactivos_margen / median(mactivos_margen, na.rm = TRUE), by = foto_mes]
+  dataset[, mrentabilidad_sobre_mediana := mrentabilidad / median(mrentabilidad, na.rm = TRUE), by = foto_mes]
+  dataset[, mtransferencias_recibidas_sobre_mediana := mtransferencias_recibidas / median(mtransferencias_recibidas, na.rm = TRUE), by = foto_mes]
+  dataset[, mtransferencias_emitidas_sobre_mediana := mtransferencias_emitidas / median(mtransferencias_emitidas, na.rm = TRUE), by = foto_mes]
+  
+  cat( "\n","Fin variables sobre mediana")
+  
+  
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
   infinitos <- lapply(
@@ -141,7 +216,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   infinitos_qty <- sum(unlist(infinitos))
   if (infinitos_qty > 0) {
-    cat(
+    cat("\n",
       "ATENCION, hay", infinitos_qty,
       "valores infinitos en tu dataset. Seran pasados a NA\n"
     )

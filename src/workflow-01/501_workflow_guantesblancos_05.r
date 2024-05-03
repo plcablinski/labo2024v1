@@ -22,7 +22,7 @@ envg$EXPENV$datasets_dir <- "~/buckets/b1/datasets/"
 envg$EXPENV$arch_sem <- "mis_semillas.txt"
 
 # default
-envg$EXPENV$gcloud$RAM <- 512
+envg$EXPENV$gcloud$RAM <- 64
 envg$EXPENV$gcloud$cCPU <- 8
 
 #------------------------------------------------------------------------------
@@ -104,10 +104,10 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  # Incorporo el nuevo script DR
   param_local$meta$script <- "/src/workflow-01/p531_DR_corregir_drifting.r"
 
-    param_local$variables_intrames <- TRUE
+  # No me engraso las manos con Feature Engineering manual
+  param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
   param_local$metodo <- "rank_cero_fijo"
@@ -162,7 +162,7 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 
   # no me engraso las manos con los Canaritos Asesinos
   # varia de 0.0 a 2.0, si es 0.0 NO se activan
-  param_local$CanaritosAsesinos$ratio <- 0.0
+  param_local$CanaritosAsesinos$ratio <- .1
   # desvios estandar de la media, para el cutoff
   param_local$CanaritosAsesinos$desvios <- 4.0
 
@@ -322,7 +322,6 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
   CA_catastrophe_default( "CA0005", "DT0005" )
 
   DR_drifting_guantesblancos( "DR0005", "CA0005" )
-    
   FE_historia_guantesblancos( "FE0005", "DR0005" )
 
   TS_strategy_guantesblancos_202109( "TS0005", "FE0005" )
@@ -346,7 +345,7 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
 
-  # Ya tengo corrido FE0005 y parto de alli
+  # Ya tengo corrido FE0001 y parto de alli
   TS_strategy_guantesblancos_202107( "TS0006", "FE0005" )
 
   HT_tuning_guantesblancos( "HT0006", "TS0006" )
