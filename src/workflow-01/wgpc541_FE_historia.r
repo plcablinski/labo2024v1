@@ -467,17 +467,14 @@ if (PARAM$lag1) {
   ]
 
   # agrego los delta lags de orden 1
-  for (vcol in cols_lagueables) {
+    for (vcol in cols_lagueables) {
     tryCatch({
       dataset[, paste0(vcol, "_delta1") := get(vcol) - get(paste0(vcol, "_lag1"))]
     }, error = function(e) {
       print(paste("Se produjo un error al calcular delta1 para:", vcol))
-      print(paste("Valor de", vcol, ":", get(vcol)))
-      print(paste("Valor de", paste0(vcol, "_lag1"), ":", get(paste0(vcol, "_lag1"))))
-      stop("La ejecución se detuvo debido al error.")
+      dataset[, paste0(vcol, "_delta1") := NA]
     })
   }
-
   OUTPUT$lag1$ncol_despues <- ncol(dataset)
   GrabarOutput()
 }
