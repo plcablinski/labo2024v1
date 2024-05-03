@@ -162,11 +162,11 @@ AgregarVariables_IntraMes <- function(dataset) {
   
   dataset[, masteruso := Master_msaldototal / Master_mlimitecompra]
   dataset[, mastermaniobra := Master_mconsumototal / Master_msaldototal]
-  dataset[, masterlimit := rowSums(cbind(Master_mfinanciacion_limite, Master_mlimitecompra), na.rm = TRUE)]
+  dataset[, masterlimit := Master_mfinanciacion_limite + Master_mlimitecompra]
   dataset[, masterrisk := Master_Finiciomora / Master_fechaalta]
   dataset[, visauso := Visa_msaldototal / Visa_mlimitecompra]
   dataset[, visamaniobra := Visa_mconsumototal / Visa_msaldototal]
-  dataset[, visalimit := rowSums(cbind(Visa_mfinanciacion_limite, Visa_mlimitecompra), na.rm = TRUE)]
+  dataset[, visalimit := Visa_mfinanciacion_limite + Visa_mlimitecompra]
   dataset[, visarisk := Visa_Finiciomora / Visa_fechaalta] 
 
   dataset[, movsyantig := rowSums(cbind(totconsumostccant, totalprestamoscant,totalinvcantidad), na.rm = TRUE)/cliente_antiguedad]
@@ -189,8 +189,10 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, solidez := rowSums(cbind(saldoyvolumen, saldoytotcuentas), na.rm = TRUE)]
   
   dataset[, saldofactores := rowSums(cbind(saldoyantig,saldoyedad, saldoydescubierto,saldoytotcuentas), na.rm = TRUE)]
+  #dataset[, volumenponderado:= rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)/solidez]
   dataset[, volumenponderado:= as.integer(rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)*solidez)]
   
+  dataset[, volumenponderado:= as.integer(rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)*solidez)]
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   cat( "\n","Fin variables combinadas agregadas")
   
