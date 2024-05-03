@@ -94,8 +94,8 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$meta$script <- "/src/workflow-01/wgpc531_DR_corregir_drifting.r"
 
   # No me engraso las manos con Feature Engineering manual
-  param_local$variables_intrames <- FALSE
-  param_local$variables_experimento <- FALSE
+  param_local$variables_intrames <- TRUE
+  param_local$variables_experimento <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
   param_local$metodo <- "rank_cero_fijo"
@@ -286,6 +286,6 @@ corrida_m_202107 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-corrida_m_202107( "comp00","0020" )
+corrida_m_202107( "comp02","0022" )
 
 
