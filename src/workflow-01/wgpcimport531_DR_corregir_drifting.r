@@ -190,7 +190,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   
   dataset[, saldofactores := rowSums(cbind(saldoyantig,saldoyedad, saldoydescubierto,saldoytotcuentas), na.rm = TRUE)]
   #dataset[, volumenponderado:= rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)/solidez]
-  dataset[, volumenponderado:= as.integer(rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)*solidez)]
+ # dataset[, volumenponderado:= as.integer(rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)*solidez)]
   
   dataset[, volumenponderado:= as.integer(rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)*solidez)]
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
