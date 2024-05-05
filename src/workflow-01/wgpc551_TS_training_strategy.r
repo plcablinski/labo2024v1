@@ -75,7 +75,7 @@ fwrite(dataset[foto_mes %in% PARAM$future, ],
 dataset_final_train <- copy(dataset[foto_mes %in% PARAM$final_train, ])
 dataset_final_train[, numero_de_cliente := NA]
 fwrite(dataset_final_train,
-  file = "dataset_final_train.csv.gz",
+  file = "dataset_train_final.csv.gz",
   logical01 = TRUE,
   sep = ","
 )
