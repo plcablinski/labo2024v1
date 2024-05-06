@@ -89,7 +89,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
 
-  param_local$meta$script <- "/src/workflow-01/wgpcimport531_DR_corregir_drifting_algunos_features_comentados.r"
+  param_local$meta$script <- "/src/workflow-01/wgpcimport531_DR_corregir_drifting_iter1.r"
 
   # No me engraso las manos con Feature Engineering manual
   param_local$variables_intrames <- TRUE
