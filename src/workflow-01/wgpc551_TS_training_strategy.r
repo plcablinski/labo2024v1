@@ -71,9 +71,18 @@ fwrite(dataset[foto_mes %in% PARAM$future, ],
   sep = ","
 )
 
-# para los meses [foto_mes %in% PARAM$final_train] creo un nuevo dataset que tenga numero_de_cliente en nulo demás datos quedan igual
+# para los meses [foto_mes %in% PARAM$final_train] creo un nuevo dataset que tenga numero_de_cliente y/o foto_mes en nulo dependiendo de
+# las variables seteadas en el script principal demás datos quedan igual
 dataset_final_train <- copy(dataset[foto_mes %in% PARAM$final_train, ])
-dataset_final_train[, numero_de_cliente := NA]
+if (PARAM$numero_de_cliente_nulo == TRUE) {
+  cat("\n numero_de_cliente_nulo = TRUE \n")
+  dataset_final_train[, numero_de_cliente := NA]
+}
+if (PARAM$foto_mes_nulo == TRUE) {
+  cat("\n foto_mes_nulo = TRUE \n")
+  dataset_final_train[, foto_mes := NA]
+}
+
 fwrite(dataset_final_train,
   file = "dataset_train_final.csv.gz",
   logical01 = TRUE,
@@ -101,11 +110,15 @@ dataset[foto_mes %in% PARAM$train$validation, fold_validate := 1L]
 dataset[, fold_test := 0L]
 dataset[foto_mes %in% PARAM$train$testing, fold_test := 1L]
 
-# En dataset seteo en nulo los numero_de_cliente que esten en PRAM$train$training
-dataset[
-  fold_train == 1,
-  numero_de_cliente := NA
-]
+# En dataset seteo en nulo los numero_de_cliente y foto_mes que esten en PRAM$train$training de acuerdo a los parámetros 
+#seteados en el script principal
+if (PARAM$numero_de_cliente_nulo == TRUE) {
+  dataset[fold_train == 1,numero_de_cliente := NA]
+}
+
+if (PARAM$foto_mes_nulo == TRUE) {
+  dataset[fold_train == 1,foto_mes := NA]
+}
 
 fwrite(dataset[fold_train + fold_validate + fold_test >= 1, ],
   file = "dataset_training.csv.gz",
