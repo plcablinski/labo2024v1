@@ -258,7 +258,7 @@ ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$graficar$ventana_suavizado <- 2001L
 
   # Una corrida de Guantes Blancos solo usa 5 semillas
-  param_local$qsemillas <- 5
+  param_local$qsemillas <- 10
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
