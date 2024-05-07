@@ -160,7 +160,8 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
   param_local$meta$script <- "/src/workflow-01/wgpc551_TS_training_strategy.r"
-
+  param_local$numero_de_cliente_nulo <- TRUE
+  param_local$foto_mes_nulo <- TRUE
 
   param_local$future <- c(202107)
   param_local$final_train <- c(202105, 202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009)
@@ -288,4 +289,4 @@ corrida_m_202107 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-corrida_m_202107( "base03","0103" )
+corrida_m_202107( "base08","0108" )
