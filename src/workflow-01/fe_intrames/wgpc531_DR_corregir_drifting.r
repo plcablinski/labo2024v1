@@ -32,6 +32,15 @@ options(error = function() {
 # Parametros del script
 PARAM <- read_yaml( "parametros.yml" )
 
+# Si PARAM$variables_iter1 no esta definido, lo defino y seteo en FALSE
+if( !exists("PARAM$variables_iter1") ) {
+  PARAM$variables_iter1 <- FALSE
+}
+
+# Si PARAM$variables_iter2 no esta definido, lo defino y seteo en FALSE
+if( !exists("PARAM$variables_iter2") ) {
+  PARAM$variables_iter2 <- FALSE
+}
 
 OUTPUT <- list()
 
