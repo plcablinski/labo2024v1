@@ -32,11 +32,11 @@ options(error = function() {
 # Parametros del script
 PARAM <- read_yaml( "parametros.yml" )
 
-# Si PARAM$variables_catedra no esta definido, lo defino y seteo en TRUE
-# if( !exists("PARAM$variables_catedra") ) {
-#  PARAM$variables_catedra <- TRUE
-#}
-
+ # Si PARAM$variables_catedra no esta definido, lo defino y seteo en TRUE
+ if( !exists("PARAM$variables_catedra") ) {
+  PARAM$variables_catedra <- TRUE
+ }
+ 
 
 # Si PARAM$variables_iter1 no esta definido, lo defino y seteo en TRUE
 if( !exists("PARAM$variables_iter1") ) {
