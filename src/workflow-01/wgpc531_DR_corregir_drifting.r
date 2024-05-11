@@ -410,7 +410,10 @@ AgregarVariables_IntraMes <- function(dataset) {
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
     dataset[mapply(is.nan, dataset)] <<- 0
   }
-}
+  
+  return(dataset)
+
+  }
 #------------------------------------------------------------------------------
 # deflaciona por IPC
 # momento 1.0  31-dic-2020 a las 23:59
@@ -512,7 +515,8 @@ GrabarOutput()
 write_yaml(PARAM, file = "parametros.yml") # escribo parametros utilizados
 
 # primero agrego las variables manuales
-if (PARAM$variables_intrames) AgregarVariables_IntraMes(dataset)
+if (PARAM$variables_intrames) { dataset <- AgregarVariables_IntraMes(dataset)} 
+
 
 # ordeno dataset
 setorderv(dataset, PARAM$dataset_metadata$primarykey)
@@ -521,8 +525,7 @@ setorderv(dataset, PARAM$dataset_metadata$primarykey)
 #  estos son los campos que expresan variables monetarias
 campos_monetarios <- colnames(dataset)
 campos_monetarios <- campos_monetarios[campos_monetarios %like%
-  "^(m|Visa_m|Master_m|vm_m)"]
-
+                                         "^(m|Visa_m|Master_m|vm_m|p_|t_)"]
 # aqui aplico un metodo para atacar el data drifting
 # hay que probar experimentalmente cual funciona mejor
 switch(PARAM$metodo,
