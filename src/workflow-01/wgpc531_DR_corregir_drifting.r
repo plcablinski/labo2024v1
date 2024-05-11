@@ -32,10 +32,6 @@ options(error = function() {
 # Parametros del script
 PARAM <- read_yaml( "parametros.yml" )
 
- # Si PARAM$variables_catedra no esta definido, lo defino y seteo en TRUE
- if( !exists("PARAM$variables_catedra") ) {
-  PARAM$variables_catedra <- TRUE
- }
 
 OUTPUT <- list()
 
@@ -51,6 +47,7 @@ GrabarOutput <- function() {
 AgregarVariables_IntraMes <- function(dataset) {
   gc()
   # INICIO de la seccion donde se deben hacer cambios con variables nuevas
+
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
   dataset[, ctrx_quarter_normalizado := as.numeric(ctrx_quarter)]
@@ -60,41 +57,41 @@ AgregarVariables_IntraMes <- function(dataset) {
     cliente_antiguedad == 3,
     ctrx_quarter_normalizado := ctrx_quarter * 1.2
   ]
-  
+
   # variable extraida de una tesis de maestria de Irlanda
   dataset[, mpayroll_sobre_edad := mpayroll / cliente_edad]
-  
+
   # se crean los nuevos campos para MasterCard  y Visa,
   #  teniendo en cuenta los NA's
   # varias formas de combinar Visa_status y Master_status
   dataset[, vm_status01 := pmax(Master_status, Visa_status, na.rm = TRUE)]
   dataset[, vm_status02 := Master_status + Visa_status]
-  
+
   dataset[, vm_status03 := pmax(
     ifelse(is.na(Master_status), 10, Master_status),
     ifelse(is.na(Visa_status), 10, Visa_status)
   )]
-  
+
   dataset[, vm_status04 := ifelse(is.na(Master_status), 10, Master_status)
-          + ifelse(is.na(Visa_status), 10, Visa_status)]
-  
+    + ifelse(is.na(Visa_status), 10, Visa_status)]
+
   dataset[, vm_status05 := ifelse(is.na(Master_status), 10, Master_status)
-          + 100 * ifelse(is.na(Visa_status), 10, Visa_status)]
-  
+    + 100 * ifelse(is.na(Visa_status), 10, Visa_status)]
+
   dataset[, vm_status06 := ifelse(is.na(Visa_status),
-                                  ifelse(is.na(Master_status), 10, Master_status),
-                                  Visa_status
+    ifelse(is.na(Master_status), 10, Master_status),
+    Visa_status
   )]
-  
+
   dataset[, mv_status07 := ifelse(is.na(Master_status),
-                                  ifelse(is.na(Visa_status), 10, Visa_status),
-                                  Master_status
+    ifelse(is.na(Visa_status), 10, Visa_status),
+    Master_status
   )]
-  
-  
+
+
   # combino MasterCard y Visa
   dataset[, vm_mfinanciacion_limite := rowSums(cbind(Master_mfinanciacion_limite, Visa_mfinanciacion_limite), na.rm = TRUE)]
-  
+
   dataset[, vm_Fvencimiento := pmin(Master_Fvencimiento, Visa_Fvencimiento, na.rm = TRUE)]
   dataset[, vm_Finiciomora := pmin(Master_Finiciomora, Visa_Finiciomora, na.rm = TRUE)]
   dataset[, vm_msaldototal := rowSums(cbind(Master_msaldototal, Visa_msaldototal), na.rm = TRUE)]
@@ -114,7 +111,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, vm_cconsumos := rowSums(cbind(Master_cconsumos, Visa_cconsumos), na.rm = TRUE)]
   dataset[, vm_cadelantosefectivo := rowSums(cbind(Master_cadelantosefectivo, Visa_cadelantosefectivo), na.rm = TRUE)]
   dataset[, vm_mpagominimo := rowSums(cbind(Master_mpagominimo, Visa_mpagominimo), na.rm = TRUE)]
-  
+
   # a partir de aqui juego con la suma de Mastercard y Visa
   dataset[,t_activo_corriente := mcuentas_saldo+
             mplazo_fijo_dolares+
@@ -154,9 +151,9 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,c_inversiones := cplazo_fijo + cinversion1 + cinversion2
   ]
   dataset[,t_inversiones := mplazo_fijo_pesos + mplazo_fijo_dolares + minversion1_pesos + 
-            minversion1_dolares + minversion2]
+minversion1_dolares + minversion2]
   dataset[,c_seguros := cseguro_vida + cseguro_auto + cseguro_vivienda + 
-            cseguro_accidentes_personales]
+cseguro_accidentes_personales]
   dataset[,c_acred_haberes := cpayroll_trx + cpayroll2_trx
   ]
   dataset[,t_acred_haberes := mpayroll + mpayroll2]
@@ -166,15 +163,15 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,p_transferencias_emitidas := mtransferencias_emitidas / ctransferencias_emitidas]
   dataset[,i_transferencias := (mtransferencias_emitidas + mtransferencias_recibidas) / (ctransferencias_recibidas + ctransferencias_emitidas)]
   # Verificar si los denominadores son diferentes de cero
-  dataset$denominador <- dataset$ctransferencias_recibidas + dataset$ctransferencias_emitidas
-  
-  # Calcular p_ponderado_transeferencias
-  dataset$p_ponderado_transeferencias <- ifelse(dataset$denominador != 0,
-                                                (dataset$mtransferencias_recibidas * dataset$ctransferencias_recibidas +
-                                                   dataset$mtransferencias_emitidas * dataset$ctransferencias_emitidas) /
-                                                  dataset$denominador,
-                                                0)
-  
+dataset$denominador <- dataset$ctransferencias_recibidas + dataset$ctransferencias_emitidas
+
+# Calcular p_ponderado_transeferencias
+dataset$p_ponderado_transeferencias <- ifelse(dataset$denominador != 0,
+                                             (dataset$mtransferencias_recibidas * dataset$ctransferencias_recibidas +
+                                                dataset$mtransferencias_emitidas * dataset$ctransferencias_emitidas) /
+                                               dataset$denominador,
+                                             0)
+
   # Eliminar la columna de auxiliar de denominador si ya no la necesitas
   dataset <- subset(dataset, select = -c(denominador))
   dataset[,c_cheques := ccheques_depositados + ccheques_emitidos]  
@@ -193,11 +190,11 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,i_pasivos := (mpasivos_margen  - mean(mpasivos_margen,na.rm = TRUE )) / sd(mpasivos_margen, na.rm = TRUE )     ]  
   dataset[, ratio_movimiento_capital := ifelse((mpayroll + mpayroll2 ) != 0, (mtransferencias_emitidas -  ccajas_extracciones) / (mpayroll + mpayroll2 ) , NA)]
   dataset[ ,ratio_endeudamiento :=   ifelse( (mcuentas_saldo + 
-                                                mtransferencias_recibidas + mpayroll + mpayroll2 + mcheques_depositados   )!=0, (Visa_madelantopesos + Visa_madelantodolares + Master_madelantopesos +
-                                                                                                                                   Master_madelantodolares + mpagomiscuentas + mpagodeservicios + mactivos_margen + 
-                                                                                                                                   cdescubierto_preacordado + mtarjeta_visa_consumo + mtarjeta_master_consumo) / (mcuentas_saldo + 
-                                                                                                                                                                                                                    mtransferencias_recibidas + mpayroll + mpayroll2 + mcheques_depositados   ), NA)
-  ]  
+                                              mtransferencias_recibidas + mpayroll + mpayroll2 + mcheques_depositados   )!=0, (Visa_madelantopesos + Visa_madelantodolares + Master_madelantopesos +
+                                                                                                                                 Master_madelantodolares + mpagomiscuentas + mpagodeservicios + mactivos_margen + 
+                                                                                                                                 cdescubierto_preacordado + mtarjeta_visa_consumo + mtarjeta_master_consumo) / (mcuentas_saldo + 
+                                                                                                                                                                                                                  mtransferencias_recibidas + mpayroll + mpayroll2 + mcheques_depositados   ), NA)
+       ]  
   dataset[ ,ratio_ahorro :=   ifelse( (mtransferencias_recibidas + mpayroll + mpayroll2 + mcheques_depositados   )!=0, (mcuentas_saldo + mplazo_fijo_dolares + mplazo_fijo_pesos + minversion1_pesos + minversion1_dolares + minversion2) / ( mtransferencias_recibidas + mpayroll + mpayroll2 + mcheques_depositados   ), NA) ]  
   dataset[,p_atm_other := matm_other / catm_trx_other]
   dataset[,p_atm := matm / catm_trx]
@@ -222,13 +219,13 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[ ,d_cheques_emitidos :=   ifelse( ccheques_emitidos > 0 ,1, 0)]  
   dataset[ ,d_cheques_depositados :=   ifelse( ccheques_depositados > 0 ,1, 0)]  
   dataset[ ,d_operaciones_en_sucursal :=   ifelse( (
-    ccajas_transacciones +
-      ccajas_consultas +
-      ccajas_depositos +
-      ccajas_extracciones +
-      ccajas_otras
-    
-  ) > 0 ,1, 0)]  
+  ccajas_transacciones +
+  ccajas_consultas +
+  ccajas_depositos +
+  ccajas_extracciones +
+  ccajas_otras
+
+    ) > 0 ,1, 0)]  
   dataset[,t_montos := mrentabilidad+mrentabilidad_annual+mcomisiones+mactivos_margen+mpasivos_margen+mcuenta_corriente_adicional+mcuenta_corriente+mcaja_ahorro+mcaja_ahorro_adicional+mcaja_ahorro_dolares+mcuentas_saldo+mautoservicio+mtarjeta_visa_consumo+mtarjeta_master_consumo+mprestamos_personales+mprestamos_prendarios+mprestamos_hipotecarios+mplazo_fijo_dolares+mplazo_fijo_pesos+minversion1_pesos+minversion1_dolares+minversion2+mpayroll+mpayroll2+mcuenta_debitos_automaticos+mttarjeta_master_debitos_automaticos+mpagodeservicios+mpagomiscuentas+mcajeros_propios_descuentos+mtarjeta_visa_descuentos+mtarjeta_master_descuentos+mcomisiones_mantenimiento+mcomisiones_otras+mforex_buy+mforex_sell+mtransferencias_recibidas+mtransferencias_emitidas+mextraccion_autoservicio+mcheques_depositados+mcheques_emitidos+mcheques_depositados_rechazados+mcheques_emitidos_rechazados+matm+Master_mfinanciacion_limite+Master_msaldototal+Master_msaldopesos+Master_msaldodolares+Master_mconsumospesos+Master_mconsumosdolares+Master_mlimitecompra+Master_madelantopesos+Master_madelantodolares+Master_mpagado+Master_mpagospesos+Master_mpagosdolares+Master_mconsumototal+Master_mpagominimo]
   #dataset[,pond_montos := t_montos/sum(dataset$t_montos)]
   #dataset[,pond_rentabilidad := t_rentabilidad_mensual/sum(dataset$t_rentabilidad_mensual)]
@@ -237,13 +234,13 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,d_ca_negativa := ifelse( (mcaja_ahorro) > 0 ,1, 0)]
   dataset[,d_cc_negativa := ifelse( (mcuenta_corriente ) > 0 ,1, 0)]
   dataset[,indice_dummy := d_ca_negativa-d_cc_negativa-d_cajas_ahorro+dcuenta_corriente+d_debitos_automaticos+
-            d_pagodeservicios+d_pagomiscuentas+d_forex+d_forex_buy+d_forex_sell+d_transferencias_emitidas+d_uso_atm+
-            d_cheques_emitidos+d_prestamos+d_seguros+d_i_liquidez_negativa-d_rentabilidad_mensual_neg]
+          d_pagodeservicios+d_pagomiscuentas+d_forex+d_forex_buy+d_forex_sell+d_transferencias_emitidas+d_uso_atm+
+          d_cheques_emitidos+d_prestamos+d_seguros+d_i_liquidez_negativa-d_rentabilidad_mensual_neg]
   dataset[, d_uso_tarjeta_credito := ifelse(ctarjeta_visa_transacciones + ctarjeta_master_transacciones > 0, 1, 0)]
   dataset[, d_uso_tarjeta_debito := ifelse(ctarjeta_debito_transacciones  > 0, 1, 0)]
   dataset[, ratio_tarjdebito_tarjcredito := ifelse(ctarjeta_visa_transacciones + ctarjeta_master_transacciones == 0, 
-                                                   ifelse(ctarjeta_debito_transacciones == 0, 0, ctarjeta_debito_transacciones), 
-                                                   round(ctarjeta_debito_transacciones / (ctarjeta_visa_transacciones + ctarjeta_master_transacciones), 2))]
+                                                 ifelse(ctarjeta_debito_transacciones == 0, 0, ctarjeta_debito_transacciones), 
+                                                 round(ctarjeta_debito_transacciones / (ctarjeta_visa_transacciones + ctarjeta_master_transacciones), 2))]
   dataset[, ratio_visa_consumototal_saldototal := Visa_mconsumototal / Visa_msaldototal ]
   dataset[, ratio_master_consumototal_saldototal := Master_mconsumototal / Master_msaldototal ]
   dataset[, t_deuda_tarjetacredito := Visa_msaldototal + Master_msaldototal ]
@@ -272,7 +269,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, c_descuentos := ctarjeta_visa_descuentos + ctarjeta_master_descuentos]
   dataset[, t_descuentos := mtarjeta_visa_descuentos + mtarjeta_master_descuentos]
   dataset[, t_descuentos := (mtarjeta_visa_descuentos + mtarjeta_master_descuentos) / 
-            (ctarjeta_visa_descuentos + ctarjeta_master_descuentos)]
+          (ctarjeta_visa_descuentos + ctarjeta_master_descuentos)]
   dataset[, t_movimientos_voluntarios := ctrx_quarter + ctarjeta_visa_transacciones + ctarjeta_master_transacciones]
   dataset[, i_transacciones := (t_transacciones - mean(t_transacciones,na.rm = TRUE )) / sd(t_transacciones,na.rm = TRUE) ]
   dataset[, i_t_movimientos_voluntarios := (t_movimientos_voluntarios - mean(t_movimientos_voluntarios,na.rm = TRUE )) / sd(t_movimientos_voluntarios,na.rm = TRUE) ]
@@ -294,8 +291,8 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[,t_pn := t_pasivo_corriente - t_activo_corriente]
   dataset[,c_transf_netas := ctransferencias_recibidas - ctransferencias_emitidas]
   dataset[,t_transf_netas := mtransferencias_recibidas - mtransferencias_emitidas]
-
-    cat( "\n","Inicio variables combinadas agregadas iteración 1")
+  
+  cat( "\n","Inicio variables combinadas agregadas iteración 1")
   dataset[, totconsumostcpesos := rowSums(cbind(mtarjeta_visa_consumo, mtarjeta_master_consumo), na.rm = TRUE)]
   dataset[, totconsumostccant  := rowSums(cbind(ctarjeta_visa_transacciones, ctarjeta_master_transacciones), na.rm = TRUE)]
   dataset[, totalprestamospesos := rowSums(cbind(mprestamos_personales, mprestamos_prendarios, mprestamos_hipotecarios ), na.rm = TRUE)]
@@ -306,9 +303,9 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, totalpayrollpesos := rowSums(cbind(mpayroll, mpayroll2), na.rm = TRUE)]
   dataset[, totalpayrollcant := rowSums(cbind(cpayroll_trx, cpayroll2_trx), na.rm = TRUE)]
   dataset[, totalgastospesos := rowSums(cbind(mcuenta_debitos_automaticos, mttarjeta_visa_debitos_automaticos,mttarjeta_master_debitos_automaticos, 
-                                        mpagodeservicios, mpagomiscuentas), na.rm = TRUE)]
+                                              mpagodeservicios, mpagomiscuentas), na.rm = TRUE)]
   dataset[, totalgastoscant := rowSums(cbind(ccuenta_debitos_automaticos, ctarjeta_visa_debitos_automaticos, ctarjeta_master_debitos_automaticos,
-                                        cpagodeservicios, cpagomiscuentas), na.rm = TRUE)]
+                                             cpagodeservicios, cpagomiscuentas), na.rm = TRUE)]
   dataset[, totalbenefpesos := rowSums(cbind(mcajeros_propios_descuentos, mtarjeta_visa_descuentos, mtarjeta_master_descuentos), na.rm = TRUE)]
   dataset[, totalbenefcant := rowSums(cbind(ccajeros_propios_descuentos, ctarjeta_visa_descuentos, ctarjeta_master_descuentos), na.rm = TRUE)]
   dataset[, totalforexpesos := rowSums(cbind(mforex_buy, mforex_sell), na.rm = TRUE)]
@@ -331,7 +328,7 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, visamaniobra := Visa_mconsumototal / Visa_msaldototal]
   dataset[, visalimit := Visa_mfinanciacion_limite + Visa_mlimitecompra]
   dataset[, visarisk := Visa_Finiciomora / Visa_fechaalta] 
-
+  
   dataset[, movsyantig := rowSums(cbind(totconsumostccant, totalprestamoscant,totalinvcantidad), na.rm = TRUE)/cliente_antiguedad]
   dataset[, tcyantig := totconsumostccant / cliente_antiguedad]
   dataset[, prestyantig := totalprestamoscant / cliente_antiguedad]
@@ -342,23 +339,23 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, prestyedad := totalprestamoscant / cliente_edad]
   dataset[, invyedad := totalinvcantidad / cliente_edad]
   dataset[, saldoyedad := rowSums(cbind(totconsumostcpesos, totalprestamospesos,totalinvpesos,totalforexpesos), na.rm = TRUE)/cliente_edad]
-
+  
   dataset[, cheqydescubierto := cheqbalpesos / cdescubierto_preacordado]
   dataset[, saldoydescubierto := mcuentas_saldo / cdescubierto_preacordado]
   dataset[, volumen := rowSums(cbind(totconsumostccant, totalprestamoscant, totalinvcantidad, totalserv, 
-                                         totalpayrollcant, totalgastoscant, totalbenefcant, interaccant, transftotcant, cheqtotcant), na.rm = TRUE)]
+                                     totalpayrollcant, totalgastoscant, totalbenefcant, interaccant, transftotcant, cheqtotcant), na.rm = TRUE)]
   dataset[, saldoyvolumen := mcuentas_saldo * volumen]
   dataset[, saldoytotcuentas := mcuentas_saldo * tcuentas]
   dataset[, saldofactores := rowSums(cbind(saldoyantig,saldoyedad, saldoydescubierto,saldoytotcuentas), na.rm = TRUE)]
   dataset[, vm_mtot_transacciones_deb_cred := ctarjeta_debito_transacciones + ctarjeta_visa_transacciones + ctarjeta_master_transacciones ]
   cat( "\n","Fin variables combinadas agregadas iteración 1")
-
+  
   cat( "\n","Inicio variables combinadas agregadas iteración 2")
   dataset[, solidez := rowSums(cbind(saldoyvolumen, saldoytotcuentas), na.rm = TRUE)]
   dataset[, volumenponderado:= as.integer(rowSums(cbind(totalpayrollpesos, totalgastospesos), na.rm = TRUE)/solidez)]
   cat( "\n","Fin variables combinadas agregadas iteración 2")
-
-    # divide columna por la mediana de columna para ese foto_mes
+  
+  # divide columna por la mediana de columna para ese foto_mes
   cat( "\n","Inicio variables sobre mediana")
   dataset[, mcaja_ahorro_sobre_mediana := mcaja_ahorro / median(mcaja_ahorro, na.rm = TRUE), by = foto_mes]
   dataset[, mcuentas_saldo_sobre_mediana := mcuentas_saldo / median(mcuentas_saldo, na.rm = TRUE), by = foto_mes]
@@ -373,9 +370,10 @@ AgregarVariables_IntraMes <- function(dataset) {
   dataset[, mrentabilidad_sobre_mediana := mrentabilidad / median(mrentabilidad, na.rm = TRUE), by = foto_mes]
   dataset[, mtransferencias_recibidas_sobre_mediana := mtransferencias_recibidas / median(mtransferencias_recibidas, na.rm = TRUE), by = foto_mes]
   dataset[, mtransferencias_emitidas_sobre_mediana := mtransferencias_emitidas / median(mtransferencias_emitidas, na.rm = TRUE), by = foto_mes]
+  
   cat( "\n","Fin variables sobre mediana")
-
-    # valvula de seguridad para evitar valores infinitos
+  
+  # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
   infinitos <- lapply(
     names(dataset),
@@ -384,11 +382,11 @@ AgregarVariables_IntraMes <- function(dataset) {
 
   infinitos_qty <- sum(unlist(infinitos))
   if (infinitos_qty > 0) {
-    cat("\n",
+    cat(
       "ATENCION, hay", infinitos_qty,
       "valores infinitos en tu dataset. Seran pasados a NA\n"
     )
-    dataset[mapply(is.infinite, dataset)] <<- NA
+    dataset[mapply(is.infinite, dataset)] <- NA
   }
 
 
@@ -408,12 +406,10 @@ AgregarVariables_IntraMes <- function(dataset) {
     )
 
     cat("Si no te gusta la decision, modifica a gusto el programa!\n\n")
-    dataset[mapply(is.nan, dataset)] <<- 0
+    dataset[mapply(is.nan, dataset)] <- 0
   }
-  
   return(dataset)
-
-  }
+}
 #------------------------------------------------------------------------------
 # deflaciona por IPC
 # momento 1.0  31-dic-2020 a las 23:59
@@ -515,8 +511,9 @@ GrabarOutput()
 write_yaml(PARAM, file = "parametros.yml") # escribo parametros utilizados
 
 # primero agrego las variables manuales
-if (PARAM$variables_intrames) { dataset <- AgregarVariables_IntraMes(dataset)} 
-
+if (PARAM$variables_intrames){
+  dataset <- AgregarVariables_IntraMes(dataset)
+} 
 
 # ordeno dataset
 setorderv(dataset, PARAM$dataset_metadata$primarykey)
@@ -525,7 +522,8 @@ setorderv(dataset, PARAM$dataset_metadata$primarykey)
 #  estos son los campos que expresan variables monetarias
 campos_monetarios <- colnames(dataset)
 campos_monetarios <- campos_monetarios[campos_monetarios %like%
-                                         "^(m|Visa_m|Master_m|vm_m|p_|t_)"]
+  "^(m|Visa_m|Master_m|vm_m|p_|t_)"]
+
 # aqui aplico un metodo para atacar el data drifting
 # hay que probar experimentalmente cual funciona mejor
 switch(PARAM$metodo,
