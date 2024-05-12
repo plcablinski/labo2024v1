@@ -82,7 +82,7 @@ TS_strategy_guantesblancos_202109 <- function( pmyexp, pinputexps, pserver="loca
 
 # Hyperparamteter Tuning 
 
-HT_tuning_baseline <- function( pmyexp, pinputexps, pserver="local")
+HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
