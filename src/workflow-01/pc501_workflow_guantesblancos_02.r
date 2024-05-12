@@ -281,16 +281,16 @@ corrida_m_202109 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
   
-  DT_incorporar_dataset_default( paste0("DT",pcorrida), "competencia_2024.csv.gz")
-  CA_catastrophe_default( paste0("CA",pcorrida), paste0("DT",pcorrida) )
+  #DT_incorporar_dataset_default( paste0("DT",pcorrida), "competencia_2024.csv.gz")
+  #CA_catastrophe_default( paste0("CA",pcorrida), paste0("DT",pcorrida) )
   
-  DR_drifting_guantesblancos( paste0("DR",pcorrida), paste0("CA",pcorrida))
+  #DR_drifting_guantesblancos( paste0("DR",pcorrida), paste0("CA",pcorrida))
   
-  FE_historia_guantesblancos( paste0("FE",pcorrida), paste0("DR",pcorrida) )
+  #FE_historia_guantesblancos( paste0("FE",pcorrida), paste0("DR",pcorrida) )
   
-  TS_strategy_guantesblancos_202109( paste0("TS",pcorrida), paste0("FE",pcorrida))
+  #TS_strategy_guantesblancos_202109( paste0("TS",pcorrida), paste0("FE",pcorrida))
   
-  HT_tuning_guantesblancos( paste0("HT",pcorrida), paste0("TS",pcorrida) )
+  #HT_tuning_guantesblancos( paste0("HT",pcorrida), paste0("TS",pcorrida) )
   # El ZZ depente de HT y TS
   ZZ_final_guantesblancos( paste0("ZZ",pcorrida), c(paste0("HT",pcorrida),paste0("TS",pcorrida)) )
   
