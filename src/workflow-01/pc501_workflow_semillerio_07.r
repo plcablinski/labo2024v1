@@ -285,8 +285,7 @@ corrida_m_202109 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
   
   FE_historia_guantesblancos( paste0("FE",pcorrida), paste0("DR",pcorrida) )
   
-  # Arranca desde la FE1002
-  TS_strategy_guantesblancos_202109( paste0("TS",pcorrida), "FE1002")
+  TS_strategy_guantesblancos_202109( paste0("TS",pcorrida), paste0("FE",pcorrida))
   
   HT_tuning_guantesblancos( paste0("HT",pcorrida), paste0("TS",pcorrida) )
   # El ZZ depente de HT y TS
