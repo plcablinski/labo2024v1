@@ -315,7 +315,7 @@ ZZ_final_semillerio_baseline <- function( pmyexp, pinputexps, pserver="local")
 # Que predice 202109
 # y ya genera archivos para Kaggle
 
-corrida_baseline_semillerio_202109 <- function( pnombrewf, pvirgen=FALSE )
+corrida_baseline_semillerio_202109 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
   # El ZZ depente de HT y TS
@@ -329,7 +329,7 @@ corrida_baseline_semillerio_202109 <- function( pnombrewf, pvirgen=FALSE )
 #Aqui empieza el programa
 
 
-corrida_m_202109( "final03","1003" )
+corrida_baseline_semillerio_202109( "final03","1003" )
 
 
 
