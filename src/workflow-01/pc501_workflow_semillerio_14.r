@@ -277,7 +277,7 @@ ZZ_final_semillerio_baseline <- function( pmyexp, pinputexps, pserver="local")
 corrida_m_202109 <- function( pnombrewf,pcorrida, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
-  HT_tuning_guantesblancos( paste0("HT",pcorrida), "TS2007")
+  HT_tuning_guantesblancos( paste0("HT",pcorrida), "TS1007")
   # El ZZ depente de HT y TS
   ZZ_final_semillerio_baseline( paste0("ZZ",pcorrida), c(paste0("HT",pcorrida),paste0("TS",pcorrida)) )
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
