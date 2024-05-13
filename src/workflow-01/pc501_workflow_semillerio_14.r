@@ -201,6 +201,7 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   #  los que tienen un vector,  son los que participan de la Bayesian Optimization
   
   param_local$lgb_param <- list(
+    num_threads = 8L, # numero de hilos
     boosting = "gbdt", # puede ir  dart  , ni pruebe random_forest
     objective = "binary",
     metric = "custom",
